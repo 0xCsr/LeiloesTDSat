@@ -129,7 +129,7 @@ public class vendasVIEW extends javax.swing.JFrame {
         });
     }
     
-    private void listarProdutos() {
+    protected void listarProdutos() {
         try {
             DefaultTableModel model = (DefaultTableModel) listaProdutos.getModel();
             model.setNumRows(0);
