@@ -13,10 +13,13 @@ import javax.swing.JOptionPane;
  * @author Adm
  */
 public class conectaDAO {
+    private final String user = "root";
+    private final String password = "abcd1234"; // Ao padrão da atividade, o campo de senha estava vazio. 
+                                                // Alterei para conseguir conectar ao meu banco.
     
     public Connection connectDB() {
         try {
-            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/uc11?user=root&password=abcd1234&useSSL=false");
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/uc11?useSSL=false", user, password);
             return conn;
         } catch (SQLException erro){
             JOptionPane.showMessageDialog(null, "Erro ConectaDAO" + erro.getMessage());

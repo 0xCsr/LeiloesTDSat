@@ -46,16 +46,11 @@ public class ProdutosDAO {
             
             try (ResultSet rs = prep.executeQuery()) {
                 while (rs.next()) {
-                    Integer id = rs.getInt("id");
-                    String nome = rs.getString("nome");
-                    Integer valor = rs.getInt("valor");
-                    String status = rs.getString("status");
-                    
                     produtosDTO.add(new ProdutosDTO(
-                        id,
-                        nome,
-                        valor,
-                        status
+                            rs.getInt("id"),
+                            rs.getString("nome"),
+                            rs.getInt("valor"),
+                            rs.getString("status")
                     ));
                 }
             }
@@ -65,5 +60,36 @@ public class ProdutosDAO {
             throw new RuntimeException(sqle.getMessage(), sqle);
         }
     }
-}
 
+    
+    public boolean venderProduto(int id) {
+        if (id <= 0 || id > Integer.MAX_VALUE) {
+            return false;
+        }
+        
+        String verificar = "select status from produtos where id = ?;";
+        String sql = "update produtos set status = 'Vendido' where id = ?;";
+    
+        try (Connection conn = new conectaDAO().connectDB()) {
+            try (PreparedStatement prep = conn.prepareStatement(verificar)) {
+                prep.setInt(1, id);
+                
+                try (ResultSet rs = prep.executeQuery()) {
+                    while (rs.next()) {
+                        if (rs.getString("status").equals("Vendido")) {
+                            return false;
+                        }
+                    }
+                }
+            }
+            
+            try (PreparedStatement prep = conn.prepareStatement(sql)) {
+                prep.setInt(1, id);
+                prep.executeUpdate();
+                return true;
+            }
+        } catch (SQLException sqle) {
+            throw new RuntimeException(sqle.getMessage(), sqle);
+        }
+    }
+}
